@@ -2,7 +2,7 @@ package datamodels;
 
 import java.time.LocalDate;
 
-public class part {
+public class Part {
     public static final int DEFAULT_LOW_STOCK_THRESHOLD = 10;
 
     private String code;
@@ -16,7 +16,7 @@ public class part {
     private int lowStockThreshold = DEFAULT_LOW_STOCK_THRESHOLD;
 
 
-    public part(String code, String name, String supplier, double price,
+    public Part(String code, String name, String supplier, double price,
                 int quantity, String category, LocalDate dateAdded, String imageFile) {
         this.code = code;
         this.name = name;
