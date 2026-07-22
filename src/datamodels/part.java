@@ -27,6 +27,14 @@ public class Part {
         this.dateAdded = dateAdded;
         this.imageFile = imageFile;
     }
+    public boolean isLowStock() {
+        return quantity < lowStockThreshold;
+    }
+
+    public double getTotalValue() {
+        return price * quantity;
+    }
+
 
     public String getCode() { return code; }
     public void setCode(String code) { this.code = code; }
