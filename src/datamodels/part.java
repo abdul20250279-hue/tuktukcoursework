@@ -62,3 +62,8 @@ public class Part {
         return code + "|" + name + "|" + supplierText + "|" + price + "|" + quantity + "|"
                 + category + "|" + dateText + "|" + imageText + "|" + lowStockThreshold;
 }
+
+    public String toString() {
+    return code + " - " + name + " (" + category + ") qty=" + quantity + " price=" + price;
+    }
+}
