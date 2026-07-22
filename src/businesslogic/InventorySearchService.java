@@ -18,7 +18,7 @@ public class InventorySearchService {
             }
             if (minPrice != null && part.getPrice() < minPrice) continue;
             if (maxPrice != null && part.getPrice() > maxPrice) continue;
-            
+
             if (keyword != null && !keyword.trim().isEmpty()) {
                 String search = keyword.trim().toLowerCase();
                 boolean nameMatches = part.getName().toLowerCase().contains(search);
