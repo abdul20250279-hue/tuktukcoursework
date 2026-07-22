@@ -28,7 +28,18 @@ public class ManualSort {
         }
         return compareStrings(a.getCode(), b.getCode());
     }
-    
+    public static List<dealer> sortByLocation(List<dealer> dealers) {
+        for (int i = 1; i < dealers.size(); i++) {
+            dealer current = dealers.get(i);
+            int j = i - 1;
+            while (j >= 0 && compareStrings(dealers.get(j).getLocation(), current.getLocation()) > 0) {
+                dealers.set(j + 1, dealers.get(j));
+                j--;
+            }
+            dealers.set(j + 1, current);
+        }
+        return dealers;
+    }
     private static int compareStrings(String a, String b) {
         if (a == null) {
             a = "";
