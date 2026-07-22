@@ -55,3 +55,10 @@ public class Part {
     public int getLowStockThreshold() { return lowStockThreshold; }
     public void setLowStockThreshold(int lowStockThreshold) { this.lowStockThreshold = lowStockThreshold; }
 
+    public String toFileLine() {
+        String supplierText = supplier == null ? "" : supplier;
+        String dateText = dateAdded == null ? "" : dateAdded.toString();
+        String imageText = imageFile == null ? "" : imageFile;
+        return code + "|" + name + "|" + supplierText + "|" + price + "|" + quantity + "|"
+                + category + "|" + dateText + "|" + imageText + "|" + lowStockThreshold;
+}
