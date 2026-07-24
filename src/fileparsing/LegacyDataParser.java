@@ -7,8 +7,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class LegacyDataParser {
+    private static final DateTimeFormatter[] DATE_FORMATS = {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+            DateTimeFormatter.ofPattern("yyyy/MM/dd"),
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+            DateTimeFormatter.ofPattern("d-MMM-yyyy"),
+            DateTimeFormatter.ofPattern("MMM d, yyyy")
+    };
+
 
     private final List<String> skippedLines = new ArrayList<>();
 
@@ -46,7 +58,8 @@ public class LegacyDataParser {
         String supplier = fields[2].trim();
         double price = parsePrice(fields[3]);
         int quantity = parseQuantity(fields[4]);
-        String category = fields[5].trim();
+        String category = normaliseCategory(fields[5]);
+
 
         if (code.isEmpty() || name.isEmpty()) {
             throw new IllegalArgumentException("missing code or name");
@@ -142,5 +155,30 @@ public class LegacyDataParser {
             return 0;
         }
         return Integer.parseInt(number.toString());
+    }
+    private String normaliseCategory(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return "Uncategorised";
+        }
+        String trimmed = raw.trim().toLowerCase();
+        String firstLetter = trimmed.substring(0, 1).toUpperCase();
+        String rest = trimmed.substring(1);
+        return firstLetter + rest;
+    }
+
+
+    private LocalDate parseDate(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return null;
+        }
+        String trimmed = raw.trim();
+        for (DateTimeFormatter format : DATE_FORMATS) {
+            try {
+                return LocalDate.parse(trimmed, format);
+            } catch (DateTimeParseException e) {
+
+            }
+        }
+        return null;
     }
 }
