@@ -12,6 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class LegacyDataParser {
+    private static final String[] MONTH_NAMES = {
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+
     private static final DateTimeFormatter[] DATE_FORMATS = {
             DateTimeFormatter.ofPattern("yyyy-MM-dd"),
             DateTimeFormatter.ofPattern("yyyy/MM/dd"),
@@ -120,8 +125,44 @@ public class LegacyDataParser {
         }
         tokens.add(current.toString().trim());
 
-        return tokens.toArray(new String[0]);
+        List<String> fixedTokens = new ArrayList<>();
+        int i = 0;
+        while (i < tokens.size()) {
+            String token = tokens.get(i);
+            if (i + 1 < tokens.size() && looksLikeMonthAndDay(token) && looksLikeYear(tokens.get(i + 1))) {
+                fixedTokens.add(token + ", " + tokens.get(i + 1));
+                i = i + 2;
+            } else {
+                fixedTokens.add(token);
+                i = i + 1;
+            }
+        }
+
+        return fixedTokens.toArray(new String[0]);
     }
+
+    private boolean looksLikeMonthAndDay(String token) {
+        for (String month : MONTH_NAMES) {
+            if (token.startsWith(month)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean looksLikeYear(String token) {
+        if (token.length() != 4) {
+            return false;
+        }
+        for (int i = 0; i < token.length(); i++) {
+            if (!Character.isDigit(token.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 
     private double parsePrice(String raw) {
         if (raw == null || raw.trim().isEmpty()) {
