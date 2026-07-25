@@ -56,3 +56,65 @@ public class CartTest {
             cart.addItem(enginePart, 20);
         });
     }
+//discount test
+
+    @Test
+    @DisplayName("Test 5: No discount for less than 3 items")
+    void testNoDiscount() {
+        cart.addItem(brakePart, 2);
+        double total = cart.calculateTotal();
+        assertEquals(600.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 6: Bulk discount - 5% for 3+ units")
+    void testBulkDiscount() {
+        cart.addItem(brakePart, 3);
+        double total = cart.calculateTotal();
+        assertEquals(855.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 7: Bulk discount with 4 units")
+    void testBulkDiscount4Units() {
+        cart.addItem(brakePart, 4);
+        double total = cart.calculateTotal();
+        assertEquals(1140.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 8: Synergy discount - 10% for Engine + Electrical")
+    void testSynergyDiscount() {
+        cart.addItem(enginePart, 1);
+        cart.addItem(electricalPart, 1);
+
+        double total = cart.calculateTotal();
+        assertEquals(1350.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 9: Both discounts - bulk + synergy")
+    void testBothDiscounts() {
+        cart.addItem(enginePart, 3);
+        cart.addItem(electricalPart, 1);
+
+        double total = cart.calculateTotal();
+        assertEquals(3015.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 10: Empty cart total is 0")
+    void testEmptyCartTotal() {
+        double total = cart.calculateTotal();
+        assertEquals(0.00, total, 0.01);
+    }
+
+    @Test
+    @DisplayName("Test 11: Check if cart is empty")
+    void testCartIsEmpty() {
+        assertTrue(cart.isEmpty());
+
+        cart.addItem(enginePart, 1);
+        assertFalse(cart.isEmpty());
+    }
+}
