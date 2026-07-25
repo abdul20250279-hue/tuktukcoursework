@@ -65,12 +65,13 @@ public class LegacyDataParser {
         int quantity = parseQuantity(fields[4]);
         String category = normaliseCategory(fields[5]);
 
+        LocalDate date = fields.length > 6 ? parseDate(fields[6]) : null;
+        String image = fields.length > 7 ? fields[7].trim() : "";
 
         if (code.isEmpty() || name.isEmpty()) {
             throw new IllegalArgumentException("missing code or name");
         }
-
-        return new Part(code, name, supplier, price, quantity, category, null, "");
+        return new Part(code, name, supplier, price, quantity, category, date, image);
     }
 
     public List<dealer> loadDealers(Path file) throws IOException {
@@ -100,8 +101,16 @@ public class LegacyDataParser {
 
         String code = fields[0].trim();
         String name = fields[1].trim();
-        String phone = fields[2].trim();
-        String location = fields.length > 3 ? fields[3].trim() : "";
+        String phone = "";
+        String location = "";
+
+        if (fields.length == 3) {
+            location = fields[2].trim();
+            phone = "N/A";
+        } else if (fields.length >= 4) {
+            phone = fields[2].trim();
+            location = fields[3].trim();
+        }
 
         if (code.isEmpty() || name.isEmpty()) {
             throw new IllegalArgumentException("missing code or name");
@@ -129,7 +138,14 @@ public class LegacyDataParser {
         int i = 0;
         while (i < tokens.size()) {
             String token = tokens.get(i);
-            if (i + 1 < tokens.size() && looksLikeMonthAndDay(token) && looksLikeYear(tokens.get(i + 1))) {
+            boolean isMonth = false;
+            for (String month : MONTH_NAMES) {
+                if (token.startsWith(month)) {
+                    isMonth = true;
+                    break;
+                }
+            }
+            if (isMonth && i + 1 < tokens.size() && looksLikeYear(tokens.get(i + 1))) {
                 fixedTokens.add(token + ", " + tokens.get(i + 1));
                 i = i + 2;
             } else {
@@ -137,7 +153,6 @@ public class LegacyDataParser {
                 i = i + 1;
             }
         }
-
         return fixedTokens.toArray(new String[0]);
     }
 
@@ -168,17 +183,16 @@ public class LegacyDataParser {
         if (raw == null || raw.trim().isEmpty()) {
             return 0.0;
         }
-        StringBuilder number = new StringBuilder();
-        for (int i = 0; i < raw.length(); i++) {
-            char c = raw.charAt(i);
-            if (Character.isDigit(c) || c == '.') {
-                number.append(c);
-            }
-        }
-        if (number.length() == 0) {
+        String cleaned = raw.replaceAll("[^0-9.]", "");
+
+        if (cleaned.isEmpty()) {
             return 0.0;
         }
-        return Double.parseDouble(number.toString());
+        try {
+            return Double.parseDouble(cleaned);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     private int parseQuantity(String raw) {
@@ -217,7 +231,6 @@ public class LegacyDataParser {
             try {
                 return LocalDate.parse(trimmed, format);
             } catch (DateTimeParseException e) {
-
             }
         }
         return null;
