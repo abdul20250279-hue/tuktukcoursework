@@ -72,3 +72,37 @@ public class InventorySearchServiceTest {
         List<Part> results = service.search(parts, null, null, null, "NonExistent");
         assertEquals(0, results.size());
     }
+//multi criteria test
+
+    @Test
+    @DisplayName("Test 7: Search with category + keyword")
+    void testSearchCategoryAndKeyword() {
+        List<Part> results = service.search(parts, "Engine", null, null, "Filter");
+        assertEquals(1, results.size());
+        assertEquals("P004", results.get(0).getCode());
+    }
+
+    @Test
+    @DisplayName("Test 8: Search with price range + keyword")
+    void testSearchPriceRangeAndKeyword() {
+        List<Part> results = service.search(parts, null, 200.0, 500.0, "Brake");
+        assertEquals(1, results.size());
+        assertEquals("P002", results.get(0).getCode());
+    }
+
+    @Test
+    @DisplayName("Test 9: Search with category + price range")
+    void testSearchCategoryAndPriceRange() {
+        List<Part> results = service.search(parts, "Engine", 100.0, 500.0, null);
+        assertEquals(1, results.size());
+        assertEquals("P004", results.get(0).getCode());
+    }
+
+    @Test
+    @DisplayName("Test 10: Search with all three filters")
+    void testSearchAllThreeFilters() {
+        List<Part> results = service.search(parts, "Engine", 100.0, 500.0, "Filter");
+        assertEquals(1, results.size());
+        assertEquals("P004", results.get(0).getCode());
+    }
+}
