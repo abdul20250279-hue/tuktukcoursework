@@ -5,4 +5,4 @@ D104,  Maharagama Tuk Parts, 0705556666 ,Maharagama
 D105|Nimal & Sons|0778889999| Malabe
 D106 ; Athurugiriya Auto ; 0721112222 ; Athurugiriya
 D107, Koswatta Three-Wheelers, , Koswatta
-D108|Weliweriya Spares| 0764445555 |Weliweriya 
+D108|Weliweriya Spares| 0764445555 |Weliweriya
