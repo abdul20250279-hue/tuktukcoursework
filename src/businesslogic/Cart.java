@@ -41,4 +41,7 @@ public class Cart {
     public boolean isEmpty() {
         return items.isEmpty();
     }
+    public List<Part>getItems(){
+        return items;
+    }
 }

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Separator?>
+
+<BorderPane fx:controller="MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <TabPane prefHeight="700.0" prefWidth="1100.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Inventory Management">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1100.0">
+                            <children>
+                                <HBox spacing="10.0" prefHeight="50.0" prefWidth="1100.0" style="-fx-padding: 10;">
+                                    <children>
+                                        <Button mnemonicParsing="false" text="Add Part" onAction="#showAddPartDialog" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                                        <Button mnemonicParsing="false" text="Edit Selected" onAction="#showEditPartDialog" style="-fx-background-color: #2196F3; -fx-text-fill: white;" />
+                                        <Button mnemonicParsing="false" text="Delete Selected" onAction="#deleteSelectedPart" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
+                                        <Button mnemonicParsing="false" text="Refresh" onAction="#refreshAll" />
+                                        <Button mnemonicParsing="false" text="Save to File" onAction="#saveInventoryToFile" style="-fx-background-color: #FF9800; -fx-text-fill: white;" />
+                                    </children>
+                                </HBox>
+
+                                <HBox spacing="10.0" layoutY="50.0" style="-fx-padding: 10;">
+                                    <children>
+                                        <Label text="Low Stock Threshold:" />
+                                        <TextField fx:id="thresholdField" prefWidth="60" text="10" />
+                                        <Button text="Update Threshold" onAction="#updateLowStockThreshold" />
+                                    </children>
+                                </HBox>
+
+                                <TableView fx:id="inventoryTable" layoutY="100.0" prefHeight="350.0" prefWidth="1100.0">
+                                    <columns>
+                                        <TableColumn prefWidth="80.0" text="Code" />
+                                        <TableColumn prefWidth="200.0" text="Name" />
+                                        <TableColumn prefWidth="150.0" text="Supplier" />
+                                        <TableColumn prefWidth="100.0" text="Price" />
+                                        <TableColumn prefWidth="100.0" text="Quantity" />
+                                        <TableColumn prefWidth="150.0" text="Category" />
+                                    </columns>
+                                </TableView>
+
+                                <Label layoutY="460.0" style="-fx-padding: 10; -fx-font-weight: bold;" text="Low Stock Items:" />
+                                <ListView fx:id="lowStockListView" layoutY="485.0" prefHeight="80.0" prefWidth="1100.0" />
+
+                                <HBox layoutY="575.0" spacing="30.0" style="-fx-padding: 10;">
+                                    <children>
+                                        <Label fx:id="totalItemsLabel" text="Total Items: 0" style="-fx-font-weight: bold;" />
+                                        <Label fx:id="totalValueLabel" text="Total Value: Rs. 0.00" style="-fx-font-weight: bold;" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Search &amp; Filter">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1100.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="10.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Multi-Criteria Search" />
+
+                                <GridPane hgap="10.0" layoutX="10.0" layoutY="40.0" prefWidth="1080.0" vgap="10.0">
+                                    <children>
+                                        <Label text="Category:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <ComboBox fx:id="categoryFilterCombo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                        <Label text="Min Price:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                        <TextField fx:id="minPriceField" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                                        <Label text="Max Price:" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                                        <TextField fx:id="maxPriceField" prefWidth="100.0" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+
+                                        <Label text="Keyword:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <TextField fx:id="keywordField" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3" />
+
+                                        <Button onAction="#performSearch" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                        <Button onAction="#clearSearch" text="Clear Filters" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    </children>
+                                </GridPane>
+
+                                <Separator layoutX="10.0" layoutY="120.0" prefWidth="1080.0" />
+
+                                <TableView fx:id="searchResultsTable" layoutX="10.0" layoutY="140.0" prefHeight="350.0" prefWidth="1080.0">
+                                    <columns>
+                                        <TableColumn prefWidth="80.0" text="Code" />
+                                        <TableColumn prefWidth="200.0" text="Name" />
+                                        <TableColumn prefWidth="150.0" text="Category" />
+                                        <TableColumn prefWidth="100.0" text="Price" />
+                                        <TableColumn prefWidth="100.0" text="Quantity" />
+                                    </columns>
+                                </TableView>
+
+                                <Button layoutX="10.0" layoutY="505.0" onAction="#addFromSearchToCart" style="-fx-background-color: #FF9800; -fx-text-fill: white;" text="Add Selected to Cart" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Shopping Cart">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1100.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="10.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Shopping Cart" />
+
+                                <TableView fx:id="cartTable" layoutX="10.0" layoutY="40.0" prefHeight="350.0" prefWidth="1080.0">
+                                    <columns>
+                                        <TableColumn prefWidth="80.0" text="Code" />
+                                        <TableColumn prefWidth="300.0" text="Name" />
+                                        <TableColumn prefWidth="100.0" text="Price" />
+                                        <TableColumn prefWidth="100.0" text="Quantity" />
+                                    </columns>
+                                </TableView>
+
+                                <Label fx:id="cartTotalLabel" layoutX="10.0" layoutY="405.0" style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Cart Total: Rs. 0.00" />
+
+                                <HBox layoutX="10.0" layoutY="435.0" spacing="10.0">
+                                    <children>
+                                        <Button onAction="#showAddToCartDialog" text="Add Item to Cart" />
+                                        <Button onAction="#removeFromCart" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Remove Selected" />
+                                        <Button onAction="#processCheckout" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Checkout" />
+                                        <Button onAction="#clearCart" text="Clear Cart" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+
+                <Tab text="Dealer Management">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="700.0" prefWidth="1100.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="10.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Dealer Management" />
+
+                                <HBox layoutX="10.0" layoutY="40.0" spacing="10.0">
+                                    <children>
+                                        <Button onAction="#showAllDealers" text="Show All Dealers" />
+                                        <Button onAction="#selectRandomDealers" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Select 4 Random Dealers" />
+                                    </children>
+                                </HBox>
+
+                                <TextArea fx:id="dealerDisplayArea" editable="false" layoutX="10.0" layoutY="80.0" prefHeight="550.0" prefWidth="1080.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>
